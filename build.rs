@@ -43,7 +43,8 @@ fn run() -> Result<(), Box<dyn Error>> {
         LinkMode::Static => {
             for entry in fs::read_dir(&directory)? {
                 if let Some(name) = entry?.path().file_name().and_then(OsStr::to_str) {
-                    let is_mlir = name.starts_with("libMLIR") || name.starts_with("MLIR");
+                    let is_mlir = name.starts_with("libMLIR")
+                        || (name.starts_with("MLIR") && name != "MLIR-C.lib");
                     if is_mlir {
                         if let Some(name) = parse_static_lib_name(name) {
                             println!("cargo:rustc-link-lib=static={name}");
